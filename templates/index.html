@@ -5,9 +5,10 @@
   </head>
   <h1>Page News</h1>
   <section>
-    (there will be a list of wikis here)
     <ul>
-      <li><a href="/page-news/sync+swim">Sync+Swim</a></li>
+      {% for wikidir in wikidirs %}
+      <li><a href="/page-news/{{ wikidir }}">{{ wikidir }}</a></li>
+      {% endfor %}
     </ul>
   </section>
 </html>
