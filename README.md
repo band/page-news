@@ -15,6 +15,7 @@ pip install -r requirements.txt
 # cd to directory containing script
 source venv/bin/activate
 ./app.py
+# visit http://localhost:8385/ in your web browser
 ```
 
 TODO: explain how to run in the background, and/or using a proxy
