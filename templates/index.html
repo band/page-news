@@ -4,11 +4,18 @@
     <title>Page News</title>
   </head>
   <h1>Page News</h1>
+  {% if obsidian_vaults is defined and obsidian_vaults|length > 0 %}
   <section>
+    <h2>Obsidian Vaults</h2>
     <ul>
-      {% for wikidir in wikidirs %}
+      {% for wikidir in obsidian_vaults %}
       <li><a href="/page-news/{{ wikidir }}">{{ wikidir }}</a></li>
       {% endfor %}
     </ul>
   </section>
+  {% else %}
+  <section>
+    <div><em>No Obsidian Vaults Found</em></div>
+  </section>
+  {% endif %}
 </html>

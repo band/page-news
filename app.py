@@ -16,14 +16,18 @@ def page_news(wikidir):
 
 @app.route("/")
 def index():
-    wikidirs = get_vault_paths()
-    return render_template('index.html', wikidirs=wikidirs)
+    obsidian_vaults = []
+    try:
+        obsidian_vaults = get_vault_paths()
+    except:
+        pass
+    return render_template('index.html', obsidian_vaults=obsidian_vaults)
 
 ################################################################
 
 # find all the vaults Obsidian is tracking
 # taken from https://github.com/peterkaminski/obsidian-settings-manager
-# TODO: don't fail if they don't have Obsidian installed
+# TODO: do something nice (don't crash) if Obsidian isn't installed, or if OS is not Mac
 def get_vault_paths():
     vault_paths = []
 
