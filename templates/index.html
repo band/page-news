@@ -6,6 +6,13 @@
   <h1>Page News</h1>
   {% if obsidian_vaults is defined and obsidian_vaults|length > 0 %}
   <section>
+    <h2>Dev</h2>
+    <ul>
+      <li><a href="/syncthing/config">Syncthing Devices and Folders</a></li>
+      <li><a href="/syncthing/events">Syncthing Events</a></li>
+    </ul>
+  </section>
+  <section>
     <h2>Obsidian Vaults</h2>
     <ul>
       {% for wiki in obsidian_vaults %}

@@ -1,0 +1,15 @@
+<html>
+  <head>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <title>Page News: Syncthing Events</title>
+  </head>
+  {% include '_navbar.html' %}
+  <h1>Syncthing ItemFinished Events</h1>
+  <section>
+    <ul>
+      {% for event in events %}
+      <li>{{ event.data.item }} = {{ event.time }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+</html>

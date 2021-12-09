@@ -1,15 +1,49 @@
 #!/usr/bin/env python
 
-from flask import Flask
-from flask import render_template
-import json
-from pathlib import Path
+################################################################
+#
+# Page News - lists the recently changed pages in a Massive Wiki.
+#
+# Copyright 2021 Bill Anderson, Peter Kaminski.
+# 
+# Page News is licensed under MIT License, see the LICENSE file for details.
+# Central repository: <https://github.com/Massive-Wiki/page-news>
+#
+################################################################
 
+# standard Python libraries
+import json
+import os
+from pathlib import Path
+import requests
+
+# `pip install flask`
+from flask import Flask, render_template
+
+# set up Flask
 app = Flask(__name__)
+app.config['FLASK_DEBUG'] = True
+app.config['STATIC_FOLDER'] = '/static'
+app.config['TEMPLATES_FOLDER'] = '/templates'
+
+# get auth key from environment
+syncthing_api_key = os.environ['SYNCTHING_API_KEY']
 
 ################################################################
 
 # routes
+
+# /syncthing/config
+@app.route("/syncthing/config")
+def syncthing_config():
+    return render_template('syncthing-config.html', config=get_syncthing_config())
+
+# /syncthing/events
+def isItemFinished(event):
+    return event['type'] == 'ItemFinished'
+@app.route("/syncthing/events")
+def syncthing_events():
+    return render_template('syncthing-events.html', events=filter(isItemFinished, get_syncthing_events()))
 
 # /page-news
 @app.route("/page-news/<path:wikidir>")
@@ -24,11 +58,29 @@ def index():
     try:
         # send a list of (name, path) tuples
         obsidian_vaults = [(Path(p).name, p) for p in get_vault_paths()]
-    except:
+    except Exception as e:
         pass
     return render_template('index.html', obsidian_vaults=obsidian_vaults)
 
 ################################################################
+
+# get syncthing events
+def get_syncthing_events():
+    r = requests.get('http://localhost:8384/rest/events', headers={"X-API-Key":syncthing_api_key})
+    try:
+        return r.json()
+    except Exception as e:
+        app.logger.debug(f"get_syncthing_events error: {e}")
+        return None
+
+# get syncthing config, for devices and folders
+def get_syncthing_config():
+    r = requests.get('http://localhost:8384/rest/config', headers={"X-API-Key":syncthing_api_key})
+    try:
+        return r.json()
+    except Exception as e:
+        app.logger.debug(f"get_syncthing_config error: {e}")
+        return None
 
 # find all the vaults Obsidian is tracking
 # taken from https://github.com/peterkaminski/obsidian-settings-manager

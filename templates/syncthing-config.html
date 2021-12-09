@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <title>Page News: Syncthing Config</title>
+  </head>
+  {% include '_navbar.html' %}
+  <h1>Syncthing Config</h1>
+  <section>
+    <h2>Devices</h2>
+    <ul>
+      {% for device in config.devices %}
+      <li>{{ device.name }} = {{ device.deviceID }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  <section>
+    <h2>Local Folders</h2>
+    <ul>
+      {% for folder in config.folders %}
+      <li>{{ folder.label }} = {{ folder.id }} = {{ folder.path }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+</html>
