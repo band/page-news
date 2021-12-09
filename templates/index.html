@@ -16,7 +16,7 @@
     <h2>Obsidian Vaults</h2>
     <ul>
       {% for wiki in obsidian_vaults %}
-      <li><a href="/page-news{{ wiki[1] }}">{{ wiki[0] }}</a></li>
+      <li><a href="/page-news{{ wiki[1] }}">{{ wiki[0] }}</a>{% if wiki[2] %} (git){% endif %}</li>
       {% endfor %}
     </ul>
   </section>

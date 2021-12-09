@@ -52,13 +52,16 @@ def page_news(wikidir):
     return render_template('page-news.html', wiki=(Path(wikidir).name, wikidir))
 
 # /
+def hasGit(p):
+    return (Path(p) / ".git").is_dir()
 @app.route("/")
 def index():
     obsidian_vaults = []
     try:
-        # send a list of (name, path) tuples
-        obsidian_vaults = [(Path(p).name, p) for p in get_vault_paths()]
+        # send a list of (name, path, hasGit) tuples
+        obsidian_vaults = [(Path(p).name, p, hasGit(p)) for p in get_vault_paths()]
     except Exception as e:
+        app.logger.debug(f"can't retrieve Obsidian vaults error: {e}")
         pass
     return render_template('index.html', obsidian_vaults=obsidian_vaults)
 
