@@ -30,41 +30,9 @@ app.config['TEMPLATES_FOLDER'] = '/templates'
 syncthing_api_key = os.environ['SYNCTHING_API_KEY']
 
 ################################################################
-
-# routes
-
-# /syncthing/config
-@app.route("/syncthing/config")
-def syncthing_config():
-    return render_template('syncthing-config.html', config=get_syncthing_config())
-
-# /syncthing/events
-def isItemFinished(event):
-    return event['type'] == 'ItemFinished'
-@app.route("/syncthing/events")
-def syncthing_events():
-    return render_template('syncthing-events.html', events=filter(isItemFinished, get_syncthing_events()))
-
-# /page-news
-@app.route("/page-news/<path:wikidir>")
-def page_news(wikidir):
-    # wiki = (name, path) tuple
-    return render_template('page-news.html', wiki=(Path(wikidir).name, wikidir))
-
-# /
-def hasGit(p):
-    return (Path(p) / ".git").is_dir()
-@app.route("/")
-def index():
-    obsidian_vaults = []
-    try:
-        # send a list of (name, path, hasGit) tuples
-        obsidian_vaults = [(Path(p).name, p, hasGit(p)) for p in get_vault_paths()]
-    except Exception as e:
-        app.logger.debug(f"can't retrieve Obsidian vaults error: {e}")
-        pass
-    return render_template('index.html', obsidian_vaults=obsidian_vaults)
-
+#
+# utility functions
+#
 ################################################################
 
 # get syncthing events
@@ -110,6 +78,64 @@ def get_vault_paths():
     # return paths
     return vault_paths
 
+################################################################
+#
+# initial data load
+#
+################################################################
+
+# get Syncthing config (devices and folders)
+# TODO: add a "refresh" route to refresh this info
+
+syncthing_config = get_syncthing_config()
+syncthing_folders_by_path = {}
+for folder in syncthing_config["folders"]:
+    syncthing_folders_by_path[folder['path']] = folder['id']
+
+################################################################
+#
+# routes
+#
+################################################################
+
+# /syncthing/config
+@app.route("/syncthing/config")
+def syncthing_config():
+    return render_template('syncthing-config.html', config=get_syncthing_config())
+
+# /syncthing/events
+def isItemFinished(event):
+    return event['type'] == 'ItemFinished'
+@app.route("/syncthing/events")
+def syncthing_events():
+    return render_template('syncthing-events.html', events=filter(isItemFinished, get_syncthing_events()))
+
+# /page-news
+@app.route("/page-news/<path:wikidir>")
+def page_news(wikidir):
+    # wiki = (name, path) tuple
+    return render_template('page-news.html', wiki=(Path(wikidir).name, wikidir))
+
+# /
+def hasGit(p):
+    return (Path(p) / ".git").is_dir()
+def hasSyncthing(p):
+    return p in syncthing_folders_by_path
+@app.route("/")
+def index():
+    obsidian_vaults = []
+    try:
+        # send a list of (name, path, hasGit) tuples
+        obsidian_vaults = [(Path(p).name, p, hasGit(p), hasSyncthing(p)) for p in get_vault_paths()]
+    except Exception as e:
+        app.logger.debug(f"can't retrieve Obsidian vaults error: {e}")
+        pass
+    return render_template('index.html', obsidian_vaults=obsidian_vaults)
+
+################################################################
+#
+# script start
+#
 ################################################################
 
 if __name__ == '__main__':
