@@ -8,8 +8,8 @@
   <section>
     <h2>Obsidian Vaults</h2>
     <ul>
-      {% for wikidir in obsidian_vaults %}
-      <li><a href="/page-news/{{ wikidir }}">{{ wikidir }}</a></li>
+      {% for wiki in obsidian_vaults %}
+      <li><a href="/page-news{{ wiki[1] }}">{{ wiki[0] }}</a></li>
       {% endfor %}
     </ul>
   </section>

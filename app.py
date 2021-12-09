@@ -10,15 +10,20 @@ app = Flask(__name__)
 ################################################################
 
 # routes
+
+# /page-news
 @app.route("/page-news/<path:wikidir>")
 def page_news(wikidir):
-    return render_template('page-news.html', wikidir=wikidir)
+    # wiki = (name, path) tuple
+    return render_template('page-news.html', wiki=(Path(wikidir).name, wikidir))
 
+# /
 @app.route("/")
 def index():
     obsidian_vaults = []
     try:
-        obsidian_vaults = get_vault_paths()
+        # send a list of (name, path) tuples
+        obsidian_vaults = [(Path(p).name, p) for p in get_vault_paths()]
     except:
         pass
     return render_template('index.html', obsidian_vaults=obsidian_vaults)
