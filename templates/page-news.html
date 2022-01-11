@@ -6,6 +6,8 @@
   {% include '_navbar.html' %}
   <h1>Page News: {{ wiki[0] }}</h1>
   <section>
-    (there will be a list of recent page changes for {{wiki[0]}}  here)
+    {% for event in events %}
+    <p>{{ event.data.filenames }}, {{ event.time }}</p>
+    {% endfor %}
   </section>
 </html>

@@ -106,15 +106,25 @@ def syncthing_config():
 # /syncthing/events
 def isItemFinished(event):
     return event['type'] == 'ItemFinished'
+def isItemFinished_or_localIndexUpdated(event):
+    return event['type'] == 'ItemFinished' or event['type'] == 'LocalIndexUpdated'
+def isLocalIndexUpdated(event):
+    return event['type'] == 'LocalIndexUpdated'
 @app.route("/syncthing/events")
 def syncthing_events():
-    return render_template('syncthing-events.html', events=filter(isItemFinished, get_syncthing_events()))
+    return render_template('syncthing-events.html', events=filter(isLocalIndexUpdated, get_syncthing_events()))
 
 # /page-news
 @app.route("/page-news/<path:wikidir>")
 def page_news(wikidir):
+    folders = get_syncthing_config()['folders']
+    folder_id = None
+    for folder in folders:
+        if folder['path'] == f"/{wikidir}":
+            folder_id = folder['id']
+    events = [event for event in get_syncthing_events() if (event['type'] == 'LocalIndexUpdated') and ('folder' in event['data']) and (event['data']['folder'] == folder_id)]
     # wiki = (name, path) tuple
-    return render_template('page-news.html', wiki=(Path(wikidir).name, wikidir))
+    return render_template('page-news.html', wiki=(Path(wikidir).name, wikidir), events=events)
 
 # /
 def hasGit(p):
