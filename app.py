@@ -12,6 +12,7 @@
 ################################################################
 
 # standard Python libraries
+from datetime import datetime
 import json
 import os
 from pathlib import Path
@@ -19,6 +20,9 @@ import requests
 
 # `pip install flask`
 from flask import Flask, render_template
+
+# `pip install dateutil`
+from dateutil.parser import *
 
 # set up Flask
 app = Flask(__name__)
@@ -80,20 +84,6 @@ def get_vault_paths():
 
 ################################################################
 #
-# initial data load
-#
-################################################################
-
-# get Syncthing config (devices and folders)
-# TODO: add a "refresh" route to refresh this info
-
-syncthing_config = get_syncthing_config()
-syncthing_folders_by_path = {}
-for folder in syncthing_config["folders"]:
-    syncthing_folders_by_path[folder['path']] = folder['id']
-
-################################################################
-#
 # routes
 #
 ################################################################
@@ -123,8 +113,14 @@ def page_news(wikidir):
         if folder['path'] == f"/{wikidir}":
             folder_id = folder['id']
     events = [event for event in get_syncthing_events() if (event['type'] == 'LocalIndexUpdated') and ('folder' in event['data']) and (event['data']['folder'] == folder_id)]
+    times = {}
+    for event in events:
+        for filename in event['data']['filenames']:
+            if filename not in times or parse(event['time']) > times[filename]:
+                times[filename] = parse(event['time'])
     # wiki = (name, path) tuple
-    return render_template('page-news.html', wiki=(Path(wikidir).name, wikidir), events=events)
+    sorted_times = sorted(times.items(), key=lambda p: p[1], reverse=True) # sort by datetime, reverse
+    return render_template('page-news.html', wiki=(Path(wikidir).name, wikidir), sorted_times=sorted_times)
 
 # /
 def hasGit(p):

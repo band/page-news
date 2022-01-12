@@ -6,8 +6,8 @@
   {% include '_navbar.html' %}
   <h1>Page News: {{ wiki[0] }}</h1>
   <section>
-    {% for event in events %}
-    <p>{{ event.data.filenames }}, {{ event.time }}</p>
+    {% for filename, time in sorted_times %}
+    <p>{{ filename }}, {{ time.strftime('%Y-%m-%d %H:%M:%S') }}</p>
     {% endfor %}
   </section>
 </html>
