@@ -16,6 +16,7 @@ from datetime import datetime
 import json
 import os
 from pathlib import Path
+import re
 import requests
 
 # `pip install flask`
@@ -132,9 +133,10 @@ def page_news(wikidir):
     for event in events:
         for filename in event['data']['filenames']:
             if filename not in times or parse(event['time']) > times[filename]:
-                times[filename] = parse(event['time'])
-    # wiki = (name, path) tuple
+                if not re.match(".*Untitled.*", filename): # TODO: make this an optional filter
+                    times[filename] = parse(event['time'])
     sorted_times = sorted(times.items(), key=lambda p: p[1], reverse=True) # sort by datetime, reverse
+    # wiki = (name, path) tuple
     return render_template('page-news.html', wiki=(Path(wikidir).name, wikidir), sorted_times=sorted_times)
 
 # /
