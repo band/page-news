@@ -17,12 +17,14 @@ import json
 import os
 from pathlib import Path
 import re
+
+# `pip install requests`
 import requests
 
 # `pip install flask`
 from flask import Flask, render_template
 
-# `pip install dateutil`
+# `pip install python-dateutil`
 from dateutil.parser import *
 
 # set up Flask
