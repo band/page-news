@@ -84,6 +84,21 @@ def get_vault_paths():
 
 ################################################################
 #
+# initial data load
+#
+################################################################
+
+# get Syncthing config (devices and folders)
+# TODO: add a "refresh" route to refresh this info
+# TODO: or maybe just don't rely on cached data, and get it every time (maybe use list comprehension rather than `filter`)
+
+syncthing_config = get_syncthing_config()
+syncthing_folders_by_path = {}
+for folder in syncthing_config["folders"]:
+    syncthing_folders_by_path[folder['path']] = folder['id']
+
+################################################################
+#
 # routes
 #
 ################################################################
