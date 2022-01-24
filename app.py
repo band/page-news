@@ -61,7 +61,7 @@ def generate_test_file_job():
                          " - from [Choosing Civility: the twenty-five rules of considerate conduct](http://www.worldcat.org/oclc/955532052) by P.M. Forni\n\n"])
 
 scheduler = BackgroundScheduler()
-job = scheduler.add_job(generate_test_file_job, 'interval', seconds=43)
+job = scheduler.add_job(generate_test_file_job, 'cron', day_of_week='mon-fri', hour='9-16')
 scheduler.start()
 
 
