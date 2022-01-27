@@ -44,6 +44,7 @@ syncthing_api_key = os.environ['SYNCTHING_API_KEY']
 
 # `pip install apscheduler
 from apscheduler.schedulers.background import BackgroundScheduler
+from pytz import utc
 
 # set up generate_test_file_job properties
 import random
@@ -60,8 +61,8 @@ def generate_test_file_job():
                          "##  " + civility_rules[ruleN] + "\n\n",
                          " - from [Choosing Civility: the twenty-five rules of considerate conduct](http://www.worldcat.org/oclc/955532052) by P.M. Forni\n\n"])
 
-scheduler = BackgroundScheduler()
-job = scheduler.add_job(generate_test_file_job, 'cron', day_of_week='mon-fri', hour='9-16')
+scheduler = BackgroundScheduler(timezone=utc)
+job = scheduler.add_job(generate_test_file_job, 'cron', day_of_week='mon-fri', hour='13-17', jitter=120)
 scheduler.start()
 
 
