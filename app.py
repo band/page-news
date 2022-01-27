@@ -203,12 +203,12 @@ def index():
 if __name__ == '__main__':
     scheduler.init_app(app)
 
-    @scheduler.task('cron', id='do_job_2', day_of_week='mon-fri', minute='*', jitter=17)
+    @scheduler.task('cron', id='do_job_2', day_of_week='mon-fri', hour='15-23', jitter=120)
     def job2():
         ruleN = random.randint(1,25)
-        filename="data/civilityrule" + str(ruleN) + ".md"
+        filename="/Users/band/Documents/syncthing/sync+swim/nothingBurger/civilityrule" + str(ruleN) + ".md"
         print('I am touching  ' + filename +'\n')
-        Path(filename).touch(exist_ok=True)
+        Path(filename).touch(mode=644, exist_ok=True)
 
     scheduler.start()
     
