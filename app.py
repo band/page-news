@@ -58,16 +58,6 @@ import random
 # the 25 rules of civilized conduct in a dictionary
 civility_rules={1: 'Pay Attention', 2: 'Acknowledge Others', 3: 'Think the Best', 4: 'Listen', 5: 'Be Inclusive', 6: 'Speak Kindly', 7: "Don't Speak Ill", 8: 'Accept and Give Praise', 9: 'Respect Even a Subtle "No"', 10: "Respect Other's Opinions", 11: 'Mind Your Body', 12: 'Be Agreeable', 13: 'Keep It Down (and Rediscover Silence)', 14: "Respect Other People's Time", 15: "Respect Other People's Space", 16: 'Apologize Earnestly', 17: 'Assert Yourself', 18: 'Avoid Personal Questions', 19: 'Care for Your Guests', 20: 'Be a Considerate Guest', 21: 'Think Twice Before Asking for Favors', 22: 'Refrain from Idle Complaints', 23: 'Accept and Give Constructive Criticism', 24: 'Respect the Environment and Be Gentle to Animals', 25: "Don't Shift Responsibility and Blame"}
 
-def generate_test_file_job():
-    ruleN = random.randint(1,25)
-    filename="/Users/band/Documents/syncthing/sync+swim/nothingBurger/civilityrule" + str(ruleN) + ".md"
-    print('I am working ... on ' + filename +'\n')
-    with open(filename, "w") as file:
-        file.writelines(["# Civility rule number " + str(ruleN) + ":\n\n",
-                         "##  " + civility_rules[ruleN] + "\n\n",
-                         " - from [Choosing Civility: the twenty-five rules of considerate conduct](http://www.worldcat.org/oclc/955532052) by P.M. Forni\n\n"])
-
-
 ################################################################
 #
 # utility functions
