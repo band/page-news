@@ -198,7 +198,7 @@ if __name__ == '__main__':
         ruleN = random.randint(1,25)
         filename="/Users/band/Documents/syncthing/sync+swim/nothingBurger/civilityrule" + str(ruleN) + ".md"
         print('I am touching  ' + filename +'\n')
-        Path(filename).touch(mode=0o777, exist_ok=True)
+        Path(filename).touch()
 
     scheduler.start()
     
