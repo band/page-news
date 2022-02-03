@@ -193,11 +193,11 @@ def index():
 if __name__ == '__main__':
     scheduler.init_app(app)
 
-    @scheduler.task('cron', id='do_job_2', day_of_week='mon-fri', hour='15-23', jitter=120)
-    def job2():
+    @scheduler.task('cron', id='do_mod_file_time', hour='*', jitter=120)
+    def modifyFileTime():
         ruleN = random.randint(1,25)
         filename="/Users/band/Documents/syncthing/sync+swim/nothingBurger/civilityrule" + str(ruleN) + ".md"
-        print('I am touching  ' + filename +'\n')
+        print(' - touching  ' + filename +'\n')
         Path(filename).touch()
 
     scheduler.start()
