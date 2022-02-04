@@ -22,7 +22,7 @@ def get_syncthing_events():
     try:
         return r.json()
     except Exception as e:
-        app.logger.debug(f"get_syncthing_events error: {e}")
+        logging.debug(f"get_syncthing_events error: {e}")
         return None
 
 def main():
