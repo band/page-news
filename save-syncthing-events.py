@@ -28,7 +28,8 @@ def get_syncthing_events():
 def main():
     # open database
     # TODO: refactor this app so writeback can be False, to save memory
-    with shelve.open('/Users/band/.page-news/save-syncthing-events-times.shelf', flag='c', writeback=True) as times:
+    shelf_name = str(os.environ.get('HOME')+'/.page-news/save-syncthing-events-times.shelf')
+    with shelve.open(shelf_name, flag='c', writeback=True) as times:
 
         # read events from API, filter for LocalIndexUpdated
         events = [event for event in get_syncthing_events() if
