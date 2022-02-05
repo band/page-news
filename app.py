@@ -193,7 +193,7 @@ def index():
 if __name__ == '__main__':
     scheduler.init_app(app)
 
-    @scheduler.task('interval', id='do_mod_filetime', seconds=231)
+    @scheduler.task('interval', id='do_mod_filetime', seconds=7860)
     def modifyFileTime():
         ruleN = random.randint(1,25)
         filename="/Users/band/Documents/syncthing/sync+swim/nothingBurger/civilityrule" + str(ruleN) + ".md"
