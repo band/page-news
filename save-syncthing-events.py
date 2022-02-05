@@ -5,10 +5,9 @@ import logging, os
 logging.basicConfig(level=os.environ.get('LOGLEVEL', 'WARNING').upper())
 
 # standard Python libraries
+import json
 import shelve
-
-# `pip install requests`
-import requests
+from urllib import request
 
 # `pip install python-dateutil`
 from dateutil.parser import *
@@ -18,9 +17,10 @@ syncthing_api_key = os.environ['SYNCTHING_API_KEY']
 
 # get syncthing events
 def get_syncthing_events():
-    r = requests.get('http://localhost:8384/rest/events', headers={"X-API-Key":syncthing_api_key})
+    req = request.Request('http://localhost:8384/rest/events', headers={"X-API-Key":syncthing_api_key})
+    r = request.urlopen(req)
     try:
-        return r.json()
+        return json.loads(r.read().decode('utf-8'))
     except Exception as e:
         logging.debug(f"get_syncthing_events error: {e}")
         return None
