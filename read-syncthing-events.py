@@ -6,11 +6,11 @@ logging.basicConfig(level=os.environ.get('LOGLEVEL', 'WARNING').upper())
 
 # standard Python libraries
 import shelve
-from pprint import pprint
 
 def main():
     # open database
-    with shelve.open('data/save-syncthing-events-times.shelf', flag='r') as times:
+    shelf_name = str(os.environ.get('HOME')+'/.page-news/save-syncthing-events-times.shelf')
+    with shelve.open(shelf_name, flag='r') as times:
 
         for filepath in times.keys():
             print(times[filepath], filepath)
