@@ -9,8 +9,12 @@ import json
 import shelve
 from urllib import request
 
-# `pip install python-dateutil`
-from dateutil.parser import *
+from datetime import datetime
+def iso_parse(dt_string):
+    dtsplit = dt_string.split('.')
+    dtmstzsplit = dtsplit[1].split('-')
+    dtiso = str(dtsplit[0] +"."+ dtmstzsplit[0].zfill(6) +"-"+ dtmstzsplit[1])
+    return datetime.fromisoformat(dtiso)
 
 # get auth key from environment
 syncthing_api_key = os.environ['SYNCTHING_API_KEY']
@@ -39,8 +43,8 @@ def main():
         # save newer events
         for event in events:
             for filename in event['data']['filenames']:
-                if filename not in times or parse(event['time']) > times[filename]:
-                    times[filename] = parse(event['time'])
+                if filename not in times or iso_parse(event['time']) > times[filename]:
+                    times[filename] = iso_parse(event['time'])
 
 if __name__ == "__main__":
     exit(main())
