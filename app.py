@@ -4,7 +4,7 @@
 #
 # Page News - lists the recently changed pages in a Massive Wiki.
 #
-# Copyright 2021, 2022 Bill Anderson, Peter Kaminski.
+# Copyright 2021 Bill Anderson, Peter Kaminski.
 # 
 # Page News is licensed under MIT License, see the LICENSE file for details.
 # Central repository: <https://github.com/Massive-Wiki/page-news>
@@ -27,36 +27,14 @@ from flask import Flask, render_template
 # `pip install python-dateutil`
 from dateutil.parser import *
 
+# set up Flask
+app = Flask(__name__)
+app.config['FLASK_DEBUG'] = True
+app.config['STATIC_FOLDER'] = '/static'
+app.config['TEMPLATES_FOLDER'] = '/templates'
+
 # get auth key from environment
 syncthing_api_key = os.environ['SYNCTHING_API_KEY']
-
-################################################################
-#
-#  use Flask-APScheduler
-#
-################################################################
-# `pip install Flask-APScheduler`
-from flask_apscheduler import APScheduler
-
-# set Flask app configuration values
-class Config:
-    FLASK_DEBUG = True
-    STATIC_FOLDER = '/static'
-    TEMPLATES_FOLDER = '/templates'
-    SCHEDULER_API_ENABLED = True
-    SCHEDULER_TIMEZONE = "UTC"
-
-scheduler = APScheduler()
-
-# create Flask app
-app = Flask(__name__)
-app.config.from_object(Config())
-
-# set up generate_test_file_job properties
-import random
-
-# the 25 rules of civilized conduct in a dictionary
-civility_rules={1: 'Pay Attention', 2: 'Acknowledge Others', 3: 'Think the Best', 4: 'Listen', 5: 'Be Inclusive', 6: 'Speak Kindly', 7: "Don't Speak Ill", 8: 'Accept and Give Praise', 9: 'Respect Even a Subtle "No"', 10: "Respect Other's Opinions", 11: 'Mind Your Body', 12: 'Be Agreeable', 13: 'Keep It Down (and Rediscover Silence)', 14: "Respect Other People's Time", 15: "Respect Other People's Space", 16: 'Apologize Earnestly', 17: 'Assert Yourself', 18: 'Avoid Personal Questions', 19: 'Care for Your Guests', 20: 'Be a Considerate Guest', 21: 'Think Twice Before Asking for Favors', 22: 'Refrain from Idle Complaints', 23: 'Accept and Give Constructive Criticism', 24: 'Respect the Environment and Be Gentle to Animals', 25: "Don't Shift Responsibility and Blame"}
 
 ################################################################
 #
@@ -191,15 +169,4 @@ def index():
 ################################################################
 
 if __name__ == '__main__':
-    scheduler.init_app(app)
-
-    @scheduler.task('interval', id='do_mod_filetime', seconds=7860)
-    def modifyFileTime():
-        ruleN = random.randint(1,25)
-        filename="/Users/band/Documents/syncthing/sync+swim/nothingBurger/civilityrule" + str(ruleN) + ".md"
-        print(' - touching  ' + filename +'\n')
-        Path(filename).touch()
-
-    scheduler.start()
-    
-    app.run(host="localhost", port=8385, debug=True, use_reloader=False)
+    app.run(host="localhost", port=8385, debug=True)
