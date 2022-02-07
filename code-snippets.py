@@ -42,13 +42,15 @@ def get_syncthing_events():
 
 
 # 2022-02-06 here is the iso_parse Python datetime lib hack required:
+from datetime import datetime
 
 def iso_parse(dt_string):
-...     dtsplit = dt_string.split('.')
-...     dtmstzsplit = dtsplit[1].split('-')
-...     dtiso = str(dtsplit[0] +"."+ dtmstzsplit[0].zfill(6) +"-"+ dtmstzsplit[1])
-...     return datetime.fromisoformat(dtiso)
-... 
+    dtsplit = dt_string.split('.')
+    dtmstzsplit = dtsplit[1].split('-')
+    dtiso = str(dtsplit[0] +"."+ dtmstzsplit[0].zfill(6) +"-"+ dtmstzsplit[1])
+    return datetime.fromisoformat(dtiso)
+
+
 >>> iso_parse(t1)
 datetime.datetime(2022, 2, 5, 5, 47, 28, 62769, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=64800)))
 >>> iso_parse('2022-02-05T05:43:37.236189-06:00')
